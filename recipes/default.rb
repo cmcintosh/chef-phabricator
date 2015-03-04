@@ -87,25 +87,7 @@ file "Remove admin script" do
 end
 
 # just to be sure dirs exist
-directory "/etc/nginx/sites-available"
-directory "/etc/nginx/sites-enabled"
+directory "/etc/apache2/sites-available"
+directory "/etc/apache2/sites-enabled"
 
-# enable and start, will reload if symlink is created or config updated
-service "nginx" do
-    service_name node['phabricator']['nginx']['service']
-    action [:enable, :start]
-end
-
-# Set nginx dependencies.
-template "/etc/nginx/sites-available/phabricator" do
-    source "nginx.erb"
-    variables ({ :phabricator_dir => phabricator_dir })
-    mode 0644
-    notifies :reload, "service[nginx]"
-end
-
-link "Enable Phabricator for nginx" do
-    to "../sites-available/phabricator"
-    target_file "/etc/nginx/sites-enabled/phabricator"
-    notifies :reload, "service[nginx]"
-end
+# configure apache2
